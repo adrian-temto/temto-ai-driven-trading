@@ -1,56 +1,25 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useRef } from "react";
+import React from "react";
+import { fadeInUp, createCardVariants, EASE_SMOOTH, DURATION_SLOWER, VIEWPORT_SETTINGS_LOOSE, VIEWPORT_SETTINGS } from "@/lib/animations";
+import { useScrollAnimationLoose, useScrollAnimationTight } from "@/lib/hooks/useScrollAnimation";
 
-// Animation variants
-const fadeInUp = {
-  hidden: { 
-    opacity: 0, 
-    y: 30 
-  },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  },
-};
+const faqItemVariants = createCardVariants(0.1, 20, false);
 
-const faqItemVariants = {
-  hidden: { 
-    opacity: 0, 
-    y: 20,
-  },
-  visible: (i: number) => ({ 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.5,
-      delay: i * 0.1,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  }),
-};
+interface FAQItem {
+  question: string;
+  answer: string;
+}
 
 export default function FAQSection() {
-  const headingRef = useRef(null);
-  const faqsRef = useRef(null);
+  const headingRef = useRef<HTMLDivElement>(null);
+  const faqsRef = useRef<HTMLDivElement>(null);
 
-  const headingInView = useInView(headingRef, { 
-    once: true, 
-    margin: "-100px",
-    amount: 0.5 
-  });
-
-  const faqsInView = useInView(faqsRef, { 
-    once: true, 
-    margin: "-100px",
-    amount: 0.2 
-  });
+  const headingInView = useScrollAnimationLoose(headingRef as React.RefObject<HTMLElement | null>);
+  const faqsInView = useScrollAnimationTight(faqsRef as React.RefObject<HTMLElement | null>);
 
   const faqData = [
     {
@@ -76,23 +45,15 @@ export default function FAQSection() {
   const secondCol = faqData; 
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#060A16] py-24">
-     
-      <motion.div 
-        className="absolute right-0 top-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-blue-900/20 blur-[120px] pointer-events-none"
-        initial={{ opacity: 0, scale: 0.8 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true, margin: "-200px" }}
-        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] as const }}
-      />
+    <section className="relative w-full overflow-hidden pt-16 md:pt-20 pb-24">
 
       <div className="relative z-10 mx-auto max-w-7xl px-6">
-        <motion.div 
-          className="rounded-3xl border border-[#294884] bg-[#0A101F]/40 p-12 backdrop-blur-md"
+        <motion.div
+          className="rounded-3xl border border-[var(--border-primary)] bg-[var(--bg-card-overlay)] p-12 backdrop-blur-md"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] as const }}
+          viewport={VIEWPORT_SETTINGS}
+          transition={{ duration: 0.7, ease: EASE_SMOOTH }}
         >
           
           <div className="mb-12 flex items-start justify-between">
@@ -102,19 +63,26 @@ export default function FAQSection() {
               initial="hidden"
               animate={headingInView ? "visible" : "hidden"}
             >
-              <h2 className="text-5xl font-bold text-white mb-4">FAQ</h2>
-              <p className="text-white/50 text-lg">
+              <h2 className="text-5xl font-bold text-[var(--text-primary)] mb-4">FAQ</h2>
+              <p className="text-[var(--text-tertiary)] text-lg">
                 Latest trends from the Temto Observatory.
               </p>
             </motion.div>
-           
-            <motion.div 
-              className="text-[#25C1F1] text-4xl"
+
+            <motion.div
+              className="shrink-0"
               initial={{ opacity: 0, rotate: -180, scale: 0 }}
               animate={headingInView ? { opacity: 1, rotate: 0, scale: 1 } : { opacity: 0, rotate: -180, scale: 0 }}
-              transition={{ delay: 0.3, duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
+              transition={{ delay: 0.3, duration: 0.6, ease: EASE_SMOOTH }}
             >
-              ✦
+              <Image
+                src="/icons/polaris-star-linear-gradient.png"
+                alt=""
+                width={48}
+                height={48}
+                className="w-10 h-10 sm:w-12 sm:h-12"
+                style={{ width: "auto", height: "auto" }}
+              />
             </motion.div>
           </div>
 
@@ -149,12 +117,19 @@ export default function FAQSection() {
   );
 }
 
-function FAQItem({ question, answer, index, isInView }: { question: string; answer: string; index: number; isInView: boolean }) {
+interface FAQItemProps {
+  question: string;
+  answer: string;
+  index: number;
+  isInView: boolean;
+}
+
+function FAQItem({ question, answer, index, isInView }: FAQItemProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <motion.div 
-      className="border-b border-white/5 py-4"
+    <motion.div
+      className="border-b border-[var(--border-tertiary)] py-4"
       variants={faqItemVariants}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
@@ -164,36 +139,35 @@ function FAQItem({ question, answer, index, isInView }: { question: string; answ
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center gap-4 text-left transition-all group"
       >
-        {/* Ikona faqVector.svg që rrotullohet kur hapet */}
-        <motion.div 
+        <motion.div
           className="shrink-0"
           animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as const }}
+          transition={{ duration: 0.3, ease: EASE_SMOOTH }}
         >
           <Image 
             src="/icons/faqVector.svg" 
             alt="Toggle" 
             width={14} 
-            height={14} 
+            height={14}
+            style={{ width: "auto", height: "auto" }}
           />
         </motion.div>
-        
-        <span className="text-[17px] font-semibold text-white group-hover:text-[#25C1F1] transition-colors">
+
+        <span className="text-[17px] font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent-primary)] transition-colors">
           {question}
         </span>
       </button>
 
-      {/* Dropdown me animacion të lartësisë */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as const }}
+            transition={{ duration: 0.3, ease: EASE_SMOOTH }}
             className="overflow-hidden"
           >
-            <p className="pl-8 pt-3 text-sm leading-relaxed text-white/50">
+            <p className="pl-8 pt-3 text-sm leading-relaxed text-[var(--text-tertiary)]">
               {answer}
             </p>
           </motion.div>

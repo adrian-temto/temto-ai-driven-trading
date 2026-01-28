@@ -1,28 +1,78 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base Colors */
+  --background: #000000;
+  --foreground: #ffffff;
+  
+  /* Primary Background Colors */
+  --bg-primary: #050B1A;
+  --bg-secondary: #060A16;
+  --bg-card: #0A101F;
+  --bg-card-hover: rgba(10, 16, 31, 0.6);
+  --bg-card-overlay: rgba(10, 16, 31, 0.4);
+  
+  /* Gradient Backgrounds */
+  --bg-gradient-start: #1B0F2E;
+  --bg-gradient-mid: #050B1A;
+  --bg-gradient-end: #072B3D;
+  
+  /* Accent Colors */
+  --accent-primary: #25C1F1;
+  --accent-secondary: #57449B;
+  --accent-tertiary: #5B3FA3;
+  --accent-success: #10B981;
+  
+  /* Gradient Accent Colors */
+  --gradient-start: #54308C;
+  --gradient-mid: #247CC6;
+  --gradient-end: #07E0FD;
+  
+  /* Border Colors */
+  --border-primary: #294884;
+  --border-secondary: rgba(255, 255, 255, 0.1);
+  --border-tertiary: rgba(255, 255, 255, 0.05);
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.5);
+  --text-quaternary: rgba(255, 255, 255, 0.4);
+  --text-quinary: rgba(255, 255, 255, 0.3);
+  --text-on-accent: #000000;
+  
+  /* Status Colors */
+  --status-success: #10B981;
+  --status-error: #ef4444;
+  --status-warning: #f59e0b;
+  
+  /* Overlay & Effects */
+  --overlay-dark: rgba(0, 0, 0, 0.2);
+  --glow-purple: rgba(85, 66, 150, 0.5);
+  --glow-cyan: rgba(0, 191, 255, 0.2);
+  
+  /* Category Colors */
+  --category-red: rgba(239, 68, 68, 0.2);
+  --category-green: rgba(16, 185, 129, 0.2);
+  --category-blue: rgba(59, 130, 246, 0.2);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-google-sans-flex);
 }
 
 body {
-  background: #000000;
+  background: var(--bg-primary);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-google-sans-flex), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
   padding: 0;
+  min-height: 100vh;
+}
+
+/* Apply font to all elements */
+* {
+  font-family: inherit;
 }

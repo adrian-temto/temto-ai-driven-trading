@@ -1,54 +1,21 @@
 'use client';
 
 import Image from "next/image";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef } from "react";
+import React from "react";
+import { fadeInUp, createCardVariants, EASE_SMOOTH } from "@/lib/animations";
+import { useScrollAnimationLoose, useScrollAnimationTight } from "@/lib/hooks/useScrollAnimation";
 
-// Animation variants
-const fadeInUp = {
-  hidden: { 
-    opacity: 0, 
-    y: 30 
-  },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  },
-};
-
-const featureVariants = {
-  hidden: { 
-    opacity: 0, 
-    y: 30,
-  },
-  visible: (i: number) => ({ 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.6,
-      delay: i * 0.1,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  }),
-};
+const featureVariants = createCardVariants(0.1, 30, false);
 
 export default function WhyChooseTemtoSection() {
-  const headingRef = useRef(null);
-
-  const headingInView = useInView(headingRef, { 
-    once: true, 
-    margin: "-100px",
-    amount: 0.5 
-  });
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const headingInView = useScrollAnimationLoose(headingRef as React.RefObject<HTMLElement | null>);
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#060A16]">
-
-      <div className="relative mx-auto max-w-7xl px-6 py-28 text-white">
+    <section className="relative w-full overflow-hidden">
+      <div className="relative mx-auto max-w-7xl px-6 pt-16 md:pt-20 pb-16 md:pb-20 text-[var(--text-primary)]">
 
         {/* Title */}
         <motion.h2 
@@ -98,16 +65,18 @@ export default function WhyChooseTemtoSection() {
   );
 }
 
-function Feature({ title, text, index }: { title: string; text: string; index: number }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { 
-    once: true, 
-    margin: "-100px",
-    amount: 0.2 
-  });
+interface FeatureProps {
+  title: string;
+  text: string;
+  index: number;
+}
+
+function Feature({ title, text, index }: FeatureProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useScrollAnimationTight(ref as React.RefObject<HTMLElement | null>);
 
   return (
-    <motion.div 
+    <motion.div
       ref={ref}
       className="relative max-w-[260px]"
       variants={featureVariants}
@@ -118,7 +87,7 @@ function Feature({ title, text, index }: { title: string; text: string; index: n
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-        transition={{ delay: index * 0.1 + 0.2, duration: 0.5 }}
+        transition={{ delay: index * 0.1 + 0.2, duration: 0.5, ease: EASE_SMOOTH }}
       >
         <Image
           src="/icons/polaris-star-linear-gradient.png"
@@ -126,16 +95,12 @@ function Feature({ title, text, index }: { title: string; text: string; index: n
           width={30}
           height={30}
           className="mb-4"
+          style={{ width: "auto", height: "auto" }}
         />
       </motion.div>
 
-      <h3 className="mb-2 text-base font-semibold">
-        {title}
-      </h3>
-
-      <p className="text-sm leading-relaxed text-white/65">
-        {text}
-      </p>
+      <h3 className="mb-2 text-base font-semibold text-[var(--text-primary)]">{title}</h3>
+      <p className="text-sm leading-relaxed text-[var(--text-tertiary)]">{text}</p>
     </motion.div>
   );
 }

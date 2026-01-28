@@ -1,85 +1,37 @@
 'use client';
 
 import Image from "next/image";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef } from "react";
+import { fadeInUp, createCardVariants, EASE_SMOOTH, DURATION_SLOWER, VIEWPORT_SETTINGS_LOOSE } from "@/lib/animations";
+import { useScrollAnimationLoose, useScrollAnimationTight } from "@/lib/hooks/useScrollAnimation";
 
-// Simple animation variants
-const fadeInUp = {
-  hidden: { 
-    opacity: 0, 
-    y: 30 
-  },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  },
-};
-
-const cardVariants = {
-  hidden: { 
-    opacity: 0, 
-    y: 30,
-  },
-  visible: (i: number) => ({ 
-    opacity: 1, 
-    y: 0,
-    transition: {
-      duration: 0.6,
-      delay: i * 0.1,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  }),
-};
+const cardVariants = createCardVariants(0.1, 30, false);
 
 export default function PricingSection() {
   const headingRef = useRef(null);
   const descriptionRef = useRef(null);
 
-  const headingInView = useInView(headingRef, { 
-    once: true, 
-    margin: "-100px",
-    amount: 0.5 
-  });
-
-  const descriptionInView = useInView(descriptionRef, { 
-    once: true, 
-    margin: "-100px",
-    amount: 0.5 
-  });
+  const headingInView = useScrollAnimationLoose(headingRef);
+  const descriptionInView = useScrollAnimationLoose(descriptionRef);
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#050B1A] py-28">
-     
-      <div className="absolute inset-0 bg-[radial-gradient(circle,_rgba(255,255,255,0.08)_1px,_transparent_1px)] bg-[size:22px_22px]" />
+    <section className="relative w-full overflow-hidden pt-16 md:pt-20 pb-16 md:pb-20">
+      <div className="absolute inset-0 bg-[radial-gradient(circle,_rgba(255,255,255,0.1)_1px,_transparent_1px)] bg-[size:36px_36px] pointer-events-none" />
 
-      
-      <motion.div 
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full opacity-40 blur-[130px] pointer-events-none z-0"
-        style={{ backgroundColor: '#5542967D' }}
-        initial={{ opacity: 0, scale: 0.9 }}
-        whileInView={{ opacity: 0.4, scale: 1 }}
-        viewport={{ once: true, margin: "-200px" }}
-        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] as const }}
-      />
-
-      <div className="relative z-10 mx-auto max-w-7xl px-6 text-white">
-        <motion.h2 
+      <div className="relative z-10 mx-auto max-w-7xl px-6 text-[var(--text-primary)]">
+        <motion.h2
           ref={headingRef}
-          className="text-center text-[36px] md:text-[48px] font-bold tracking-tight text-white"
+          className="text-center text-[36px] md:text-[48px] font-bold tracking-tight text-[var(--text-primary)]"
           variants={fadeInUp}
           initial="hidden"
           animate={headingInView ? "visible" : "hidden"}
         >
           Choose your Voyage
         </motion.h2>
-        <motion.p 
+        <motion.p
           ref={descriptionRef}
-          className="mx-auto mt-4 mb-20 max-w-2xl text-center text-white/60 text-lg"
+          className="mx-auto mt-4 mb-20 max-w-2xl text-center text-[var(--text-quaternary)] text-lg"
           variants={fadeInUp}
           initial="hidden"
           animate={descriptionInView ? "visible" : "hidden"}
@@ -144,39 +96,64 @@ export default function PricingSection() {
   );
 }
 
-function PricingCard({ title, price, period, description, features, button, variant, popular, index }: any) {
+interface PricingCardProps {
+  title: string;
+  price: string;
+  period: string;
+  description: string;
+  features: string[];
+  button: string;
+  variant: 'primary' | 'outline' | 'muted';
+  popular?: boolean;
+  index: number;
+}
+
+function PricingCard({
+  title,
+  price,
+  period,
+  description,
+  features,
+  button,
+  variant,
+  popular = false,
+  index,
+}: PricingCardProps) {
   const isCaptain = title === "The Captain";
-  const isScout = title === "The Scout";
   const cardRef = useRef(null);
-  
-  const isInView = useInView(cardRef, { 
-    once: true, 
-    margin: "-100px",
-    amount: 0.2 
-  });
-  
-  const accentColor = isCaptain ? "border-[#57449B] text-[#57449B]" : "border-[#25C1F1] text-[#25C1F1]";
-  const hoverClass = isCaptain ? "hover:border-[#57449B] hover:text-[#57449B]" : "hover:border-[#25C1F1] hover:text-[#25C1F1]";
+  const isInView = useScrollAnimationTight(cardRef);
+
+  const accentColor = isCaptain
+    ? "border-[var(--accent-secondary)] text-[var(--accent-secondary)]"
+    : "border-[var(--accent-primary)] text-[var(--accent-primary)]";
+  const hoverClass = isCaptain
+    ? "hover:border-[var(--accent-secondary)] hover:text-[var(--accent-secondary)]"
+    : "hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)]";
+
+  const borderColor = popular
+    ? "border-[var(--accent-primary)]"
+    : isCaptain
+    ? "border-[var(--accent-secondary)]"
+    : "border-[var(--border-primary)]";
+
+  const priceColor = isCaptain ? "text-[var(--accent-secondary)]" : "text-[var(--accent-primary)]";
 
   return (
     <motion.div
       ref={cardRef}
-      className={`relative flex h-full flex-col rounded-2xl border p-8 backdrop-blur-md bg-[#0A101F]/60 transition-all duration-500
-        ${popular ? "border-[#25C1F1]" : isCaptain ? "border-[#57449B]" : "border-[#294884]"}
-      `}
+      className={`relative flex h-full flex-col rounded-2xl border p-8 backdrop-blur-md bg-[var(--bg-card-hover)] transition-all duration-500 ${borderColor}`}
       variants={cardVariants}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       custom={index}
-      whileHover={{ 
+      whileHover={{
         y: -4,
-        transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const }
+        transition: { duration: 0.3, ease: EASE_SMOOTH },
       }}
     >
-      
       {popular && (
         <div className="absolute top-0 right-0">
-          <span className="block rounded-bl-xl rounded-tr-2xl bg-[#5B3FA3] px-6 py-2 text-[10px] font-bold tracking-[0.2em] text-white">
+          <span className="block rounded-bl-xl rounded-tr-2xl bg-[var(--accent-tertiary)] px-6 py-2 text-[10px] font-bold tracking-[0.2em] text-[var(--text-primary)]">
             MOST POPULAR
           </span>
         </div>
@@ -185,25 +162,37 @@ function PricingCard({ title, price, period, description, features, button, vari
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           {popular && (
-             <Image src="/icons/polaris-star-linear-gradient.svg" alt="" width={20} height={20} />
+            <Image 
+              src="/icons/polaris-star-linear-gradient.png" 
+              alt="" 
+              width={30} 
+              height={30}
+              style={{ width: "auto", height: "auto" }}
+            />
           )}
-          <h3 className="text-xl font-bold text-white">{title}</h3>
+          <h3 className="text-xl font-bold text-[var(--text-primary)]">{title}</h3>
         </div>
         <div className="flex items-baseline gap-0.5">
-          <span className={`text-2xl font-bold ${isCaptain ? 'text-[#57449B]' : 'text-[#25C1F1]'}`}>
-            {price}
-          </span>
-          <span className="text-xs text-white/40">{period}</span>
+          <span className={`text-2xl font-bold ${priceColor}`}>{price}</span>
+          <span className="text-xs text-[var(--text-quaternary)]">{period}</span>
         </div>
       </div>
 
-      <p className="text-sm text-white/50 mb-8 leading-relaxed min-h-[40px]">{description}</p>
+      <p className="text-sm text-[var(--text-tertiary)] mb-8 leading-relaxed min-h-[40px]">
+        {description}
+      </p>
 
       <ul className="mb-10 space-y-4 flex-grow">
-        {features.map((f: string, i: number) => (
-          <li key={i} className="flex items-center gap-3 text-[13px] text-white/80">
-            <Image src="/icons/polaris-star-linear-gradient.svg" alt="" width={14} height={14} />
-            {f}
+        {features.map((feature, i) => (
+          <li key={i} className="flex items-center gap-3 text-[13px] text-[var(--text-secondary)]">
+            <Image 
+              src="/icons/polaris-star-linear-gradient.png" 
+              alt="" 
+              width={14} 
+              height={14}
+              style={{ width: "auto", height: "auto" }}
+            />
+            {feature}
           </li>
         ))}
       </ul>
@@ -211,9 +200,10 @@ function PricingCard({ title, price, period, description, features, button, vari
       <button
         className={`
           w-full rounded-xl py-3.5 text-sm font-bold transition-all duration-300 border-[1.5px]
-          ${variant === 'primary' 
-            ? `bg-[#25C1F1] border-[#25C1F1] text-black hover:bg-transparent hover:text-[#25C1F1]` 
-            : `bg-transparent border-white/20 text-white ${hoverClass}`
+          ${
+            variant === "primary"
+              ? `bg-[var(--accent-primary)] border-[var(--accent-primary)] text-[var(--text-on-accent)] hover:bg-transparent hover:text-[var(--accent-primary)]`
+              : `bg-transparent border-[var(--border-secondary)] text-[var(--text-primary)] ${hoverClass}`
           }
         `}
       >
