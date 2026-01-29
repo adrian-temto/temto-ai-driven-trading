@@ -4,31 +4,15 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useCountAnimation } from "@/lib/hooks/useCountAnimation";
 import {
-  containerVariants,
-  fadeInUp,
-  blurIn,
-  scaleIn,
-  EASE_SMOOTH,
+  futureContainer,
+  futureFadeUp,
+  futureBlurReveal,
+  futureScaleIn,
+  futureStatItem,
+  EASE_FUTURE,
   DURATION_SLOWER,
 } from "@/lib/animations";
-import { colors } from "@/lib/colors";
 
-// Stat animation variants
-const statVariants = {
-  hidden: {
-    opacity: 0,
-    y: 20,
-  },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      delay: i * 0.1,
-      ease: EASE_SMOOTH,
-    },
-  }),
-};
 
 interface AnimatedStatProps {
   endValue: number;
@@ -49,7 +33,7 @@ function AnimatedStat({
 
   return (
     <motion.div
-      variants={statVariants}
+      variants={futureStatItem}
       initial="hidden"
       animate="visible"
       custom={index}
@@ -66,9 +50,9 @@ export default function HeroSection() {
       {/* Background Image */}
       <motion.div
         className="absolute inset-0 z-0"
-        initial={{ opacity: 0, scale: 1.1 }}
+        initial={{ opacity: 0, scale: 1.06 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: DURATION_SLOWER, ease: EASE_SMOOTH }}
+        transition={{ duration: DURATION_SLOWER, ease: EASE_FUTURE }}
       >
         <Image
           src="/images/heroBackgroundImage.png"
@@ -85,20 +69,20 @@ export default function HeroSection() {
         className="absolute inset-0 z-10 bg-[radial-gradient(rgba(255,255,255,0.4)_1px,transparent_1px)] [background-size:24px_24px] opacity-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.2 }}
-        transition={{ duration: 1.5, delay: 0.5 }}
+        transition={{ duration: 1.2, delay: 0.4, ease: EASE_FUTURE }}
       />
 
       {/* Content */}
       <motion.div
         className="relative z-20 mx-auto max-w-7xl px-6 pt-48 pb-28 text-center"
-        variants={containerVariants}
+        variants={futureContainer}
         initial="hidden"
         animate="visible"
       >
         <motion.p
           className="mb-4 font-light text-[var(--text-primary)]"
           style={{ fontSize: '44px' }}
-          variants={fadeInUp}
+          variants={futureFadeUp}
         >
           Stop Guessing
         </motion.p>
@@ -106,7 +90,7 @@ export default function HeroSection() {
         <motion.h1
           className="mb-6 font-bold leading-tight bg-gradient-to-r from-[var(--gradient-start)] via-[var(--gradient-mid)] to-[var(--gradient-end)] bg-clip-text text-transparent"
           style={{ fontSize: '56px' }}
-          variants={blurIn}
+          variants={futureBlurReveal}
         >
           Start Trading with <br />
           Absolute Confidence
@@ -119,19 +103,19 @@ export default function HeroSection() {
             fontWeight: 400,
             lineHeight: '1.4',
           }}
-          variants={fadeInUp}
+          variants={futureFadeUp}
         >
           The crypto market is chaotic, but your strategy doesn&apos;t have to be.
           Temto&apos;s AI constantly analyzes the market to send you precise,
           high-probability Buy &amp; Sell alerts.
         </motion.p>
 
-        <motion.div className="mb-20 flex justify-center" variants={scaleIn}>
+        <motion.div className="mb-20 flex justify-center" variants={futureScaleIn}>
           <motion.button
             className="rounded-[10px] bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-mid)] px-8 py-3 text-sm font-semibold text-[var(--text-primary)] transition hover:brightness-110 active:scale-95"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 380, damping: 20 }}
           >
             Let&apos;s Sail
           </motion.button>
@@ -139,12 +123,12 @@ export default function HeroSection() {
 
         <motion.div
           className="grid grid-cols-2 gap-8 sm:grid-cols-4"
-          variants={containerVariants}
+          variants={futureContainer}
         >
           <AnimatedStat endValue={94} suffix="%" label="Signal Accuracy" index={0} />
           <AnimatedStat endValue={24} suffix="M+" label="Volume Analyzed" index={1} />
           <AnimatedStat endValue={12} suffix="k+" label="Active Traders" index={2} />
-          <motion.div variants={statVariants} initial="hidden" animate="visible" custom={3}>
+          <motion.div variants={futureStatItem} initial="hidden" animate="visible" custom={3}>
             <p className="text-3xl font-bold text-[var(--text-primary)]">24/7</p>
             <p className="mt-1 text-sm text-[var(--text-quaternary)]">AI Monitoring</p>
           </motion.div>
