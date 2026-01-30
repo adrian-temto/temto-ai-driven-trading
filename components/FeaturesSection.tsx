@@ -3,7 +3,13 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRef } from "react";
-import { fadeInUp, createCardVariants, EASE_SMOOTH, DURATION_SLOWER, VIEWPORT_SETTINGS_LOOSE, AMOUNT_LOOSE } from "@/lib/animations";
+import {
+  fadeInUp,
+  createCardVariants,
+  EASE_SMOOTH,
+  DURATION_SLOWER,
+  VIEWPORT_SETTINGS_LOOSE,
+} from "@/lib/animations";
 import { useScrollAnimationLoose } from "@/lib/hooks/useScrollAnimation";
 
 const cardVariants = createCardVariants(0.15, 30, true);
@@ -15,21 +21,30 @@ interface FeatureCardProps {
   descriptionClassName?: string;
 }
 
-function FeatureCard({ title, description, index, descriptionClassName = "" }: FeatureCardProps) {
+function FeatureCard({
+  title,
+  description,
+  index,
+  descriptionClassName = "",
+}: FeatureCardProps) {
   const ref = useRef(null);
   const isInView = useScrollAnimationLoose(ref);
 
   return (
     <motion.div
       ref={ref}
-      className="w-[240px]"
       variants={cardVariants}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       custom={index}
+      className="w-full max-w-[280px] text-center md:text-left"
     >
-      <h3 className="mb-2 text-lg font-semibold text-[var(--text-primary)]">{title}</h3>
-      <p className={`text-[var(--text-secondary)] ${descriptionClassName}`}>{description}</p>
+      <h3 className="mb-2 text-lg font-semibold text-[var(--text-primary)]">
+        {title}
+      </h3>
+      <p className="text-sm leading-relaxed text-[var(--text-secondary)]">
+        {description}
+      </p>
     </motion.div>
   );
 }
@@ -43,7 +58,7 @@ export default function FeaturesSection() {
 
   return (
     <section className="relative w-full overflow-hidden">
-      {/* Background image with parallax effect */}
+      {/* Background image */}
       <motion.div
         className="absolute inset-0 z-0"
         initial={{ scale: 1.1, opacity: 0 }}
@@ -56,28 +71,32 @@ export default function FeaturesSection() {
           alt="Trading night"
           fill
           priority
-          className="object-contain object-center"
+          className="
+            object-cover
+            md:object-contain
+            object-center
+          "
         />
       </motion.div>
 
       {/* Content */}
-      <div className="relative z-10 mx-auto max-w-7xl px-6 pt-32 pb-16 md:pb-20 text-center text-[var(--text-primary)]">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 pt-24 pb-20 text-center text-[var(--text-primary)] md:pt-32">
         <motion.h2
           ref={headingRef}
-          className="mb-4 text-[32px] md:text-[44px] font-bold leading-tight"
           variants={fadeInUp}
           initial="hidden"
           animate={headingInView ? "visible" : "hidden"}
+          className="mb-4 font-bold leading-tight text-[28px] sm:text-[34px] md:text-[44px]"
         >
           Tired of staring at trading charts for 10 hours a day?
         </motion.h2>
 
         <motion.p
           ref={descriptionRef}
-          className="mx-auto mb-16 max-w-3xl text-[var(--text-secondary)] text-[18px] leading-relaxed"
           variants={fadeInUp}
           initial="hidden"
           animate={descriptionInView ? "visible" : "hidden"}
+          className="mx-auto mb-14 max-w-3xl text-[15px] sm:text-[16px] md:text-[18px] leading-relaxed text-[var(--text-secondary)]"
         >
           Trading crypto is exhausting. Endless charts, complex indicators, and
           emotional decisions lead to missed opportunities and painful losses.{" "}
@@ -86,24 +105,21 @@ export default function FeaturesSection() {
           </span>
         </motion.p>
 
-        <div className="grid gap-14 md:grid-cols-3 justify-items-center">
+        <div className="grid gap-12 sm:grid-cols-2 md:grid-cols-3 justify-items-center">
           <FeatureCard
             title="Zero Emotions, Pure Data"
-            description="Eliminate the panic selling and FOMO buying"
+            description="Eliminate the panic selling and FOMO buying."
             index={0}
           />
-
           <FeatureCard
             title="Always Awake"
-            description="Our AI scans thousands of market signals 24/7 while you sleep"
+            description="Our AI scans thousands of market signals 24/7 while you sleep."
             index={1}
           />
-
           <FeatureCard
             title="Be the First to Move"
             description="Get instant alerts directly on your dashboard or via email the second the trend shifts."
             index={2}
-            descriptionClassName="text-sm"
           />
         </div>
       </div>
