@@ -142,6 +142,7 @@ export const PRICING_PLANS = [
     price: "$29",
     period: "/mo",
     description: "Perfect for beginners sticking to the major safe harbors.",
+    longDescription: "Ideal if you're new to crypto or prefer to focus on Bitcoin and Ethereum. Get daily trend analysis and up to 20 high-probability signals per day delivered by email. A steady, low-noise way to start trading with confidence.",
     features: [
       "BTC & ETH Signals Only",
       "Daily Trend Analysis",
@@ -156,6 +157,7 @@ export const PRICING_PLANS = [
     price: "$79",
     period: "/mo",
     description: "For active traders ready to brave the altcoin waves.",
+    longDescription: "Step beyond the majors and catch moves across the top 20 altcoins. Real-time 4H and 1H signals plus volatility warnings help you time entries and exits. Includes everything in The Scout so you never miss a beat on BTC and ETH.",
     features: [
       "Top 20 Altcoins",
       "Real-time 4H & 1H Signals",
@@ -171,6 +173,7 @@ export const PRICING_PLANS = [
     price: "$129",
     period: "/mo",
     description: "Full command of the market with institutional-grade data.",
+    longDescription: "For serious traders who want full coverage: every market pair, 15-minute scalping signals, API access for bots and dashboards, and early alerts on low-cap gems. Institutional-grade data with the flexibility to trade your way.",
     features: [
       "All Market Pairs",
       "15-Min Scalping Signals",
