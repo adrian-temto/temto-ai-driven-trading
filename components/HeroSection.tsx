@@ -1,6 +1,7 @@
 'use client';
 
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useCountAnimation } from "@/lib/hooks/useCountAnimation";
 import {
@@ -120,15 +121,18 @@ export default function HeroSection() {
 
         {/* CTA — touch-friendly, consistent spacing */}
         <motion.div className="mb-14 flex justify-center sm:mb-20" variants={futureScaleIn}>
-          <motion.button
-            type="button"
-            className="min-h-[44px] min-w-[44px] rounded-[10px] bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-mid)] px-6 py-3.5 text-sm font-semibold text-[var(--text-primary)] transition hover:brightness-110 active:scale-95 sm:px-8"
+          <motion.div
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 380, damping: 20 }}
           >
-            Let&apos;s Sail
-          </motion.button>
+            <Link
+              href="/plans"
+              className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-[10px] bg-gradient-to-r from-[var(--gradient-start)] to-[var(--gradient-mid)] px-6 py-3.5 text-sm font-semibold text-[var(--text-primary)] transition hover:brightness-110 active:scale-95 sm:px-8"
+            >
+              Let&apos;s Sail
+            </Link>
+          </motion.div>
         </motion.div>
 
         {/* Stats — 2 cols mobile, 4 cols sm+; responsive gaps and alignment */}

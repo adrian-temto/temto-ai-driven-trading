@@ -68,7 +68,7 @@ export default function Navbar() {
             custom={1}
           >
             <Link
-              href="/contact"
+              href="/plans"
               className="rounded-[8px] bg-[var(--accent-primary)] px-6 py-2 text-sm font-semibold text-[var(--text-on-accent)] transition hover:opacity-90"
             >
               Get in touch
@@ -151,7 +151,7 @@ export default function Navbar() {
 
               <div className="mt-10">
                 <Link
-                  href="/contact"
+                  href="/plans"
                   onClick={() => setMenuOpen(false)}
                   className="inline-block rounded-[8px] bg-[var(--accent-primary)] px-6 py-3 text-sm font-semibold text-[var(--text-on-accent)] transition hover:opacity-90"
                 >
